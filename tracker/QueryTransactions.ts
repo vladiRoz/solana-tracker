@@ -1,12 +1,14 @@
 import axios from 'axios';
+import {subDays} from "date-fns/subDays";
+import {format} from "date-fns/format";
 
 // Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB - TUSD
 const query =
-    `query ($limit: Int!, $after: ISO8601DateTime, $receiver: [String!], $amount: Float!) {
+    `query ($limit: Int!, $since: ISO8601DateTime, $receiver: [String!], $amount: Float!) {
           solana(network: solana) {
             transfers(
               options: {limit: $limit, desc: "block.timestamp.iso8601"}
-              date: {after: $after}
+              date: {since: $since}
               receiverAddress: {in: $receiver}
               transferType: {is: transfer}
               success: {is: true}
@@ -32,15 +34,21 @@ const query =
         }
     `;
 
+const getLastXDaysHoursFormatted = (days: number):string => {
+    const last24Hours = subDays(new Date(), days);
+    return format(last24Hours, 'yyyy-MM-dd\'T\'HH:mm:00');
+}
+
 export const queryTransactions = async (addresses: string[]) => {
 
-    // TODO date set last day
-    // TODO run with larger number than 3
+    const since = getLastXDaysHoursFormatted(3);
+    console.log('requesting trx since', since);
+
     const variables = {
-        "limit": 3,
+        "limit": 10,
         "receiver": addresses,
         "amount": 1000,
-        "after": "2024-07-05",
+        since,
     }
 
     const config = {
@@ -72,10 +80,26 @@ export const queryTransactions = async (addresses: string[]) => {
 }
 
 export const queryTransactionsMock = async () => {
-    const demoResponse = {
+    const demoResponse =  {
         "data": {
             "solana": {
                 "transfers": [
+                    {
+                        "transaction": {
+                            "signature": "vHnsFtPDpnbyhfWgY6AsJeLnYA5rz2iiz4fSfcTZw3ePA5LQ171m7F3hxNLBQ5bVA9fvGy9KQeNia8zZSyJquNY"
+                        },
+                        "currency": {
+                            "name": "-",
+                            "symbol": "-",
+                            "address": "jWqoyb3itbujkhoiuuuMVsUHoCa1We1z5LF8voyN1Ra"
+                        },
+                        "any": "2024-07-09 13:40:30 UTC",
+                        "block": {
+                            "timestamp": {
+                                "iso8601": "2024-07-09T13:40:30Z"
+                            }
+                        }
+                    },
                     {
                         "transaction": {
                             "signature": "3j8zVVdZLokSMEVnHQNEaBXsQNpx4M8Uerr3jgaQHD42ctqek6UH4ZMX9Y45GqJH2Zr1MK34cMkcR4zxXLRhKjPQ"
@@ -94,17 +118,17 @@ export const queryTransactionsMock = async () => {
                     },
                     {
                         "transaction": {
-                            "signature": "4tPo9TpWV7ChpfNRqBc9DQnc6tcAWH2YTWrRWtmuFEb7iKce7oDugwE1jyqrtaTt1pnLdRbCauau8sK1JbmDdvSD"
+                            "signature": "4Kx7SCzUKNHGNgpCegTqqAmQWmstER4my1SVXoRG2TCAvpXWcNQKXtNdYPZPQbdTgmbEDsrvQwcyADq7R6FtmGg7"
                         },
                         "currency": {
-                            "name": "Wrapped Solana",
-                            "symbol": "SOL",
-                            "address": "So11111111111111111111111111111111111111112"
+                            "name": "-",
+                            "symbol": "-",
+                            "address": "B45QLZLZNwHo5ya5TQdjkE6A4xLCvNYvcRtjvFFZ9T72"
                         },
-                        "any": "2024-07-08 22:26:38 UTC",
+                        "any": "2024-07-08 14:54:51 UTC",
                         "block": {
                             "timestamp": {
-                                "iso8601": "2024-07-08T22:26:38Z"
+                                "iso8601": "2024-07-08T14:54:51Z"
                             }
                         }
                     },
@@ -123,11 +147,44 @@ export const queryTransactionsMock = async () => {
                                 "iso8601": "2024-07-08T14:03:59Z"
                             }
                         }
+                    },
+                    {
+                        "transaction": {
+                            "signature": "2dXZi3tMBYXcH8zQfkRpGZXn4ygYMAbjKCmUU7CB3gmde27unrX1mT5Ki1btfc4ACCk1PCBexGPXnoC2aHAncSPZ"
+                        },
+                        "currency": {
+                            "name": "-",
+                            "symbol": "-",
+                            "address": "6rThQfhir6PJXpgTBAY4K9dEhMZuLEajJmt6naQPNFau"
+                        },
+                        "any": "2024-07-07 11:28:43 UTC",
+                        "block": {
+                            "timestamp": {
+                                "iso8601": "2024-07-07T11:28:43Z"
+                            }
+                        }
+                    },
+                    {
+                        "transaction": {
+                            "signature": "9tBEnuBNsPcskhU5UhJcXZ2NfwdxqsGFginf1gsTUnoUiHFVYek4CkuothtzzHp2UM9bit68Fx8VNvV5Pu5TjyV"
+                        },
+                        "currency": {
+                            "name": "Pepe On Crack",
+                            "symbol": "PEPECRACK",
+                            "address": "VqF9cfQ6eKmWjB4C1LYnoVS8iAXevPwqmAdSjXEpump"
+                        },
+                        "any": "2024-07-07 03:57:01 UTC",
+                        "block": {
+                            "timestamp": {
+                                "iso8601": "2024-07-07T03:57:01Z"
+                            }
+                        }
                     }
                 ]
             }
         }
-    }
+    };
+
     return Promise.resolve(demoResponse);
 }
 
