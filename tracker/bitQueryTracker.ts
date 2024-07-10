@@ -2,11 +2,12 @@ import {queryTransactions, queryTransactionsMock} from "./QueryTransactions";
 
 const addresses = [
     "BwHKbKPt4bMvaAk5Qvc97euhTMNXL6qCtNwG9vse6CFQ",
+    "CXGpHdDLrnzrKY1ukvgNKM8soZhzdL5Trx5bXQdeCHVL"
 ]
 
 const track = async () => {
-    // const trxs = await queryTransactions(addresses);
-    const trxs = await queryTransactionsMock();
+    const trxs = await queryTransactions(addresses);
+    // const trxs = await queryTransactionsMock();
     console.log('trxs', JSON.stringify(trxs, null, 4));
 
     const { transfers } = trxs.data.solana;

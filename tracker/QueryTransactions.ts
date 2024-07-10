@@ -2,15 +2,15 @@ import axios from 'axios';
 
 // Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB - TUSD
 const query =
-    `query ($network: SolanaNetwork!, $limit: Int!, $after: ISO8601DateTime, $receiver: [String!], $amountInUSD: Float!) {
-          solana(network: $network) {
+    `query ($limit: Int!, $after: ISO8601DateTime, $receiver: [String!], $amount: Float!) {
+          solana(network: solana) {
             transfers(
               options: {limit: $limit, desc: "block.timestamp.iso8601"}
               date: {after: $after}
               receiverAddress: {in: $receiver}
               transferType: {is: transfer}
               success: {is: true}
-              amountInUSD: {gt: $amountInUSD}
+              amount: {gt: $amount}
               currency: {notIn: ["Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"]}
             ) {
               transaction {
@@ -34,12 +34,13 @@ const query =
 
 export const queryTransactions = async (addresses: string[]) => {
 
+    // TODO date set last day
+    // TODO run with larger number than 3
     const variables = {
         "limit": 3,
-        "network": "solana",
         "receiver": addresses,
+        "amount": 1000,
         "after": "2024-07-05",
-        "amountInUSD": 1
     }
 
     const config = {
