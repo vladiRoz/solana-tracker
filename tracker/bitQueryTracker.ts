@@ -55,13 +55,17 @@ const track = async () => {
     currencies.forEach(transfer => {
         const existingItem = uniqueItemsWithCount.find(item => (item as any).address === transfer.address);
         if (!existingItem) {
-            uniqueItemsWithCount.push({ ...transfer, count: addressCount[transfer.address] });
+            uniqueItemsWithCount.push({
+                ...transfer,
+                count: addressCount[transfer.address],
+                url: `https://dexscreener.com/solana${transfer.address}`
+            });
         }
     });
 
     const sortedCurrencies = uniqueItemsWithCount.sort((a, b) => (b as any).count - (a as any).count);
 
-    console.log('Top 10 Currencies', sortedCurrencies.slice(0, 10));
+    console.log('Top 10 Currencies', sortedCurrencies.slice(0, 20));
 
 }
 

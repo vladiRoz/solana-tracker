@@ -41,7 +41,7 @@ export const getLastXDaysHoursFormatted = (days: number):string => {
 
 export const queryTransactions = async (addresses: string[]) => {
 
-    const since = getLastXDaysHoursFormatted(3);
+    const since = getLastXDaysHoursFormatted(1);
     console.log('requesting trx since', since);
 
     const variables = {
