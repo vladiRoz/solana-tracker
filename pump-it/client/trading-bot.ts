@@ -3,6 +3,8 @@ import WebSocket from 'ws';
 import Api from "../server/api";
 import {TradeStatus} from "../consts.type";
 
+const ACTIVE_COINS = 1;
+
 interface Coin {
     name: string;
     price: number;
@@ -23,7 +25,7 @@ class TradingBot {
     private async handleNewCoin(data: WebSocket.Data) {
         const newCoin: Coin = JSON.parse(data.toString());
 
-        if (this.activePromises.size < 10) {
+        if (this.activePromises.size < ACTIVE_COINS) {
             console.log('new coin', newCoin.name, ', index: ', this.activePromises.size);
             const promise = this.handleCoin(newCoin);
             this.activePromises.set(newCoin.name, promise);
