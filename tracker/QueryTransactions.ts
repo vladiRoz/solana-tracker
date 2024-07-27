@@ -3,6 +3,8 @@ import {subDays} from "date-fns/subDays";
 import {format} from "date-fns/format";
 import {response1} from "./Response1";
 
+// add mcap
+
 const query =
     `query ($limit: Int!, $since: ISO8601DateTime, $receiver: [String!], $amount: Float!, $ignoreCurrencies: [String!]) {
           solana(network: solana) {

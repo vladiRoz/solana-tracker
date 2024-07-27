@@ -13,22 +13,24 @@ import {getLastXDaysHoursFormatted, queryTransactions, queryTransactionsMock} fr
 // 15 addresses * 2 * 8 * 30 = 7200 points
 
 const addresses = [
+    "GKEmaVnyEHQggxsRd93wPzTjgDpmUGe3cmR2CQ7YMYMo",
+    "AgVTPaga6QbCXYHUTNdjfzdbeoK5BKAuk6vJLofrNTBZ",
     "CXGpHdDLrnzrKY1ukvgNKM8soZhzdL5Trx5bXQdeCHVL",
     "8CGJPWdM7xZX5E2ZE7qw5TiNUgpLyUeXJAnHr5goezeD",
     "DVMnHHwq9SNxj4Bhd8mim1AacXfPemu6WsK8ox7Vexhg",
     "J7pMJuvFoNni6UxAavxZ26zH39gzjUS57NKNiAvezetj",
     "H4yHKvbqethH5CFwc5DUjErHETWQcDBSyB2vkXbdGX7r",
-    "CRRf1zgmgbn5UfBp6sSsdjHAqCXFQRUzKaN2ni19Dgvk",
-    "j1oAbxxiDUWvoHxEDhWE7THLjEkDQW2cSHYn2vttxTF",
-    "356JHc8eZFYF1FKkcKtjNHfSQxhPzPtBEsgJEazS95Et",
-    "Du6KcjYDAsyBtMQTPd7ndhD6N7nb7TMoimgZtwvo3hDa",
-    "8yNf3DbJYoRqfxRHZTUduJPaBYQHpAjs7XSskpkrKxBg",
-    "BdwdDJuTw9tS2o6GEaCSESwKg1PXPASRumErm2VEMEjD",
-    "AG6YJF7iH1R5io1RtyjmKcyWjYPnmSP2zBuSRBawbNhG",
-    "3JNXb6rcKiswc1d1FfrBFV7TqSFKLGRFFoXMcxCW3VNY",
-    "3LDFRAVq88XTvUtUnz6xGWisB9ALhLFKfSxeaKzAFLX7",
-    "DLocg6wustgRS8sVd9grj3smUWmw3M6sSJrydgXWrAUC",
-    "FmhDonUB11n5WyRCDEpxnNJhXDVw1JX1XJSD72ssQFhB"
+    "DGMPQVy8gYu2dBX7SHA1MpA4Cn6pRkG4jChPGM18gGX3", // 8sWKTMrh9bWUrvykK4H3jzEzGbEqvJNpS2f7joYKpump - copy trade - 31.34 SOL - 27/07
+    "H3E21pVS4mTgnkk263iVzrpP9sdXTnnvK5QnV2nJk1UE", // 8sWKTMrh9bWUrvykK4H3jzEzGbEqvJNpS2f7joYKpump - copy trade - 207.42 SOL - 27/07
+    "Ff3BRkhA1zZed5Qv9fDBZft6ndA1cSSmdUCfBLjtQ3E7", // 8sWKTMrh9bWUrvykK4H3jzEzGbEqvJNpS2f7joYKpump
+    "DmdrUanasUnPEurAuVQuFZqn7oz3kDhNuW3ZydBjTJDS", // 8sWKTMrh9bWUrvykK4H3jzEzGbEqvJNpS2f7joYKpump - copy trade - 40.71 SOL - 27/07
+    "HACi5dhfYE8KBXoqfacg6CzZraiSALHxsuz7kDT3Fntt", // 3jvkv27UDNCxz4Qxh8TKgRyLHK9tJzyfY91suYmjpump - copy trader - 5.7856 SOL - 27/07
+    "AgVTPaga6QbCXYHUTNdjfzdbeoK5BKAuk6vJLofrNTBZ", // Ht8gxUd8s6KJHxs4yqWmmR5JJRtvpYaLWu4KAwC4pump
+    "CqPguzDFD4MbJzz3Qd34K7rwc37hpCZtrZmtcaZ8EoZz", // Ht8gxUd8s6KJHxs4yqWmmR5JJRtvpYaLWu4KAwC4pump - entered with 3k size, maybe dev or insider
+    "EksEBhXW1aSuBCodBbLzr6BERsKoyXtdhH7GhJkjDYSj", // Cnjm1nK2AK6U2vBZadmB8UY8T61BsZW3vcGSDRg8d6My
+    "CeoqFgsd6sob3S1Ka7qDnXj1e76MweXx2cwUrjVqmRmv", // Cnjm1nK2AK6U2vBZadmB8UY8T61BsZW3vcGSDRg8d6My
+    "EyFNAE7DYp2EiJBs4sw2MJfGDAfSHKbcytfSy6kx6XjK", // 4AKYKa4JLKQau7m8B7hmFdN8ur1SvqUDqJt6D44Npump
+    "88ycMAV9iKedQaaVNYukKZxYuqdado6EzX1wa2XGJjME", // 3tjYEojjq5yD5ask6MKC2nA4Ben5bAYeheMbSRVjpump
 ]
 
 const track = async () => {
@@ -58,7 +60,7 @@ const track = async () => {
             uniqueItemsWithCount.push({
                 ...transfer,
                 count: addressCount[transfer.address],
-                url: `https://dexscreener.com/solana${transfer.address}`
+                url: `https://dexscreener.com/solana/${transfer.address}`
             });
         }
     });
