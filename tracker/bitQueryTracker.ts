@@ -13,7 +13,7 @@ import {getLastXDaysHoursFormatted, queryTransactions, queryTransactionsMock} fr
 // 15 addresses * 2 * 8 * 30 = 7200 points
 
 const addresses = [
-    "GKEmaVnyEHQggxsRd93wPzTjgDpmUGe3cmR2CQ7YMYMo",
+    "4QhMTvWGBLRdpAbqfNEYd1tcDpmobF513VeEq7izzDqB", // 9unfKTfGhVyYjMEt9fRq1bfovhosse2gAFbYKbXipump - solid copy trade
     "9gDj8yWC8LtwiHF6QYjitz91k4a8RwNu3HxqL1SWHHU9", // CTJf74cTo3cw8acFP1YXF3QpsQUUBGBjh2k2e8xsZ6UL - might be https://x.com/punk1685
     "2Jsy3qmi5WrozQVFyrFPw5MzivovyULMHELXweMDaqFp", // 358PuxphAQ26nktpniGzcooT1u3TZEsE2HmWgQUMpump - copy trade - 167.49 SOL - 28/07
     "5ePaQ8YreTMQbNoBwiFe6mbvBLBYoGFek3U3pC8TVVsw", // 5ePaQ8YreTMQbNoBwiFe6mbvBLBYoGFek3U3pC8TVVsw - copy trade - 171.16 SOL - 28/07

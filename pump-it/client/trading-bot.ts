@@ -19,9 +19,7 @@ const BUY_AMOUNT = 0.055; // ~10$
 // put money in the bank
 // open postman have a sell order ready in case of issues
 
-// line 100 - todo check the error screen shot and update this
-
-const NAME_FILTER = [];
+const NAME_FILTER = ["elon"];
 
 export class TradingBot {
     // private apiClient: Api;
@@ -58,7 +56,7 @@ export class TradingBot {
             return;
         }
 
-        if (this.coinNameFilter(newCoin.name, NAME_FILTER)) {
+        if (!this.coinNameFilter(newCoin.name, NAME_FILTER)) {
             return;
         }
 
