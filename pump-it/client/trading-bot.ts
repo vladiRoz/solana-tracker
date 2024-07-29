@@ -94,11 +94,15 @@ export class TradingBot {
                 amount: BUY_AMOUNT,
             });
             const buyTime2 = Date.now();
-            this.purchaseData.set(coin.mint, { buyTimes: { buyTime1, buyTime2, executionTime: buyTime2 - buyTime1 } });
+            this.purchaseData.set(coin.mint, {
+                buy: {
+                    times: { buyTime1, buyTime2, executionTime: buyTime2 - buyTime1 },
+                    response: buyResponse,
+                }
+            });
 
-
-            // todo check the error screen shot and update this
             console.log('buyResponse', buyResponse);
+
             if (buyResponse === null || buyResponse?.errors) {
                 resolve();
                 return;
@@ -117,8 +121,13 @@ export class TradingBot {
                 });
                 const sellTime2 = Date.now();
                 const purchaseData = this.purchaseData.get(coin.mint);
-                this.purchaseData.set(coin.mint, { ...purchaseData, sellTimes: { sellTime1, sellTime2, executionTime: sellTime2 - sellTime1 } });
-
+                this.purchaseData.set(coin.mint, {
+                    sell: {
+                        ...purchaseData,
+                        times: { sellTime1, sellTime2, executionTime: sellTime2 - sellTime1 },
+                        response: sellResponse,
+                    }
+                });
 
                 console.log('sellResponse', sellResponse);
                 resolve();
