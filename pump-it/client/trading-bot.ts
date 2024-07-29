@@ -15,11 +15,11 @@ const BUY_AMOUNT = 0.055; // ~10$
 // 2. 7am-12 est -> 9pm -> 2am sydney
 
 
-// TODO filter something for first time
+// filter something for first time
 // put money in the bank
 // open postman have a sell order ready in case of issues
 
-const NAME_FILTER = ["elon"];
+const NAME_FILTER = ["ussy"];
 
 export class TradingBot {
     // private apiClient: Api;
@@ -49,7 +49,7 @@ export class TradingBot {
             return;
         }
 
-        console.log('newCoin', newCoin);
+        console.log('newCoin', { name: newCoin.name, symbol: newCoin.symbol, mint: newCoin.mint });
 
         if (KILL_SWITCH){
             console.log('KILL_SWITCH on');
@@ -108,7 +108,7 @@ export class TradingBot {
 
             console.log('buyResponse', buyResponse);
 
-            if (buyResponse === null || buyResponse?.errors) {
+            if (buyResponse === null || buyResponse?.errors.length > 0 || !buyResponse.signature) {
                 KILL_SWITCH = true;
                 resolve();
                 return;
@@ -142,7 +142,7 @@ export class TradingBot {
                 }
 
                 resolve();
-            }, 3000);
+            }, 1000);
         });
     }
 

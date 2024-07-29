@@ -11,6 +11,7 @@ import axios from "axios";
 
 const FAST_FEE = 0.0015; // 0.28$
 const FASTER_FEE = 0.003; // 0.55$
+const SUPER_FEE = 0.0051; // 0.55$
 const TURBO_FEE = 0.0075; // 1.39$
 const MEGA_FEE = 0.02; // 3.7$, 1 sec trx
 
@@ -31,7 +32,7 @@ export type PumpPortalTransaction = {
 
 export const sendTransaction = async (trxData: PumpPortalTransaction) => {
     try {
-        console.log('axios', trxData);
+        console.log('sending trx', trxData);
         const response = await axios.request({
             method: 'post',
             url: TRX_URL,
@@ -45,12 +46,10 @@ export const sendTransaction = async (trxData: PumpPortalTransaction) => {
                 "amount": trxData.amount,                     // amount of SOL or tokens to trade
                 "denominatedInSol": "true",                   // "true" if amount is SOL, "false" if amount is tokens
                 "slippage": trxData.slippage,                                // percent slippage allowed
-                "priorityFee": FASTER_FEE,                         // amount to use as Jito tip or priority fee
+                "priorityFee": SUPER_FEE,                         // amount to use as Jito tip or priority fee
                 "pool": "pump"                                // exchange to trade on. "pump" or "raydium"
             }),
         });
-
-        console.log('sendTransaction response', response);
 
         return response.data;
 

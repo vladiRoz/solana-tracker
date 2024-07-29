@@ -25,8 +25,8 @@ describe('TradingBot handleNewCoin', () => {
 
     test('should call sendTransaction twice and return object with signature containing uuid', async () => {
         const mockUuid = uuidv4();
-        (sendTransaction as jest.Mock).mockResolvedValueOnce({ signature: mockUuid });
-        (sendTransaction as jest.Mock).mockResolvedValueOnce({ signature: mockUuid });
+        (sendTransaction as jest.Mock).mockResolvedValueOnce({ signature: mockUuid, errors: [] });
+        (sendTransaction as jest.Mock).mockResolvedValueOnce({ signature: mockUuid, errors: [] });
 
         const newCoin = { name: 'TestCoin', mint: 'test-mint' };
         bot.handleNewCoin(JSON.stringify(newCoin));
