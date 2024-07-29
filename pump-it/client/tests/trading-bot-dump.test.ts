@@ -20,7 +20,7 @@ describe('TradingBot - dumpDataToFile', () => {
 
         bot.dumpDataToFile(filePath);
 
-        const expectedData = JSON.stringify(Array.from(bot.purchaseData.entries()), null, 2);
+        const expectedData = JSON.stringify(Object.fromEntries(bot.purchaseData.entries()), null, 2);
         expect(fs.writeFileSync).toHaveBeenCalledWith(filePath, expectedData, 'utf-8');
     });
 });

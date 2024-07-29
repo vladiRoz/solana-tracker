@@ -44,7 +44,7 @@ export class TradingBot {
         });
     }
 
-    private async handleNewCoin(data: WebSocket.Data) {
+    public handleNewCoin(data: WebSocket.Data) {
         const newCoin = JSON.parse(data.toString());
         if (newCoin.message){
             // "Successfully subscribed to token creation events."
@@ -88,7 +88,7 @@ export class TradingBot {
         return regex.test(name);
     }
 
-    private async handleCoin(coin: NewToken): Promise<void> {
+    private handleCoin(coin: NewToken): Promise<void> {
         return new Promise(async (resolve) => {
 
             console.log('buy request, mint: ', coin.mint);
@@ -116,8 +116,7 @@ export class TradingBot {
                 return;
             }
 
-            const checkGain = setTimeout(async () => {
-                clearInterval(checkGain);
+            setTimeout(async () => {
 
                 console.log('sell request, mint: ', coin.mint);
 
