@@ -1,32 +1,69 @@
-// tradingBot.ts
 import WebSocket from 'ws';
-import Api from "../server/api";
-import {TradeStatus} from "../consts.type";
+import { NewToken } from "../consts.type";
+import { sendTransaction } from "./pump-portal";
+import fs from 'fs';
+
+const WS_URL = 'wss://pumpportal.fun/api/data';
 
 const ACTIVE_COINS = 1;
+const ONE_TIME = true;
+const BUY_AMOUNT = 0.055; // ~10$
 
-interface Coin {
-    name: string;
-    price: number;
-}
+// at what hours/timezone usually there is more volume activity?
+// 1. 12-3am est -> 2pm - 5pm sydney
+// 2. 7am-12 est -> 9pm -> 2am sydney
 
-class TradingBot {
-    private apiClient: Api;
-    private ws: WebSocket;
+
+// TODO filter something for first time
+// put money in the bank
+// open postman have a sell order ready in case of issues
+
+// line 100 - todo check the error screen shot and update this
+
+const NAME_FILTER = [];
+
+export class TradingBot {
+    // private apiClient: Api;
+    public ws: WebSocket;
     private activePromises: Map<string, Promise<void>> = new Map();
+    public purchaseData: Map<string, any> = new Map();
+    private loopIndex = 0;
 
-    constructor(url: string) {
-        this.apiClient = new Api();
-        this.ws = new WebSocket(url);
+    constructor() {
+        // this.apiClient = new Api();
+        this.ws = new WebSocket(WS_URL);
+    }
+
+    public init() {
         this.ws.on('message', this.handleNewCoin.bind(this));
-        this.ws.on('open', () => console.log('Connected to web socket'));
+        this.ws.on('open', () => {
+            this.ws.send(JSON.stringify({
+                method: "subscribeNewToken",
+            }));
+        });
     }
 
     private async handleNewCoin(data: WebSocket.Data) {
-        const newCoin: Coin = JSON.parse(data.toString());
+        const newCoin = JSON.parse(data.toString());
+        if (newCoin.message){
+            // "Successfully subscribed to token creation events."
+            return;
+        }
+
+        console.log('newCoin', newCoin);
+
+        if (this.coinNameFilter(newCoin.name, NAME_FILTER)) {
+            return;
+        }
+
+        if (ONE_TIME && this.loopIndex === 1) {
+            console.log('ONE_TIME trx');
+            return;
+        }
+        this.loopIndex++;
 
         if (this.activePromises.size < ACTIVE_COINS) {
-            console.log('new coin', newCoin.name, ', index: ', this.activePromises.size);
+            console.log('index: ', this.activePromises.size);
             const promise = this.handleCoin(newCoin);
             this.activePromises.set(newCoin.name, promise);
 
@@ -37,29 +74,69 @@ class TradingBot {
         }
     }
 
-    private async handleCoin(coin: Coin): Promise<void> {
-        return new Promise((resolve) => {
-            const startTime = Date.now();
-            const status = this.apiClient.buyCoin(coin);
-            if (status !== TradeStatus.SUCCESS) {
+    public coinNameFilter(name: string, words: string[]) {
+        if (words.length === 0) {
+            return false;
+        }
+        const regex = new RegExp(words.join('|'), 'i');
+        return regex.test(name);
+    }
+
+    private async handleCoin(coin: NewToken): Promise<void> {
+        return new Promise(async (resolve) => {
+
+            console.log('buy request, mint: ', coin.mint);
+
+            const buyTime1 = Date.now();
+            const buyResponse: any = await sendTransaction({
+                action: "buy",
+                mint: coin.mint,
+                amount: BUY_AMOUNT,
+            });
+            const buyTime2 = Date.now();
+            this.purchaseData.set(coin.mint, { buyTimes: { buyTime1, buyTime2, executionTime: buyTime2 - buyTime1 } });
+
+
+            // todo check the error screen shot and update this
+            console.log('buyResponse', buyResponse);
+            if (buyResponse === null || buyResponse?.errors) {
                 resolve();
                 return;
             }
 
-            const initialPrice = coin.price;
+            const checkGain = setTimeout(async () => {
+                clearInterval(checkGain);
 
-            const checkGain = setInterval(() => {
-                const currentPrice = this.apiClient.getPrice(coin);
-                const elapsedTime = Date.now() - startTime;
+                console.log('sell request, mint: ', coin.mint);
 
-                if (currentPrice >= initialPrice * 1.1 || elapsedTime >= 3000) {
-                    clearInterval(checkGain);
-                    this.apiClient.sellCoin(coin);
-                    resolve();
-                }
-            }, 100); // Check every 100ms
+                const sellTime1 = Date.now();
+                const sellResponse = await sendTransaction({
+                    action: "sell",
+                    mint: coin.mint,
+                    amount: "100%",
+                });
+                const sellTime2 = Date.now();
+                const purchaseData = this.purchaseData.get(coin.mint);
+                this.purchaseData.set(coin.mint, { ...purchaseData, sellTimes: { sellTime1, sellTime2, executionTime: sellTime2 - sellTime1 } });
+
+
+                console.log('sellResponse', sellResponse);
+                resolve();
+            }, 3000);
         });
     }
-}
 
-const bot = new TradingBot('ws://localhost:8080');
+    public dumpDataToFile(filePath: string) {
+        let existingData = [];
+        if (fs.existsSync(filePath)) {
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            if (fileContent.trim()) {
+                existingData = JSON.parse(fileContent);
+            }
+        }
+        const newData = Object.fromEntries(this.purchaseData.entries());
+        const mergedData = { ...existingData, ...newData };
+        fs.writeFileSync(filePath, JSON.stringify(mergedData, null, 2), 'utf-8');
+        console.log(`Data appended to ${filePath}`);
+    }
+}

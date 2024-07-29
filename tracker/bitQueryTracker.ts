@@ -14,12 +14,12 @@ import {getLastXDaysHoursFormatted, queryTransactions, queryTransactionsMock} fr
 
 const addresses = [
     "GKEmaVnyEHQggxsRd93wPzTjgDpmUGe3cmR2CQ7YMYMo",
-    "AgVTPaga6QbCXYHUTNdjfzdbeoK5BKAuk6vJLofrNTBZ",
-    "CXGpHdDLrnzrKY1ukvgNKM8soZhzdL5Trx5bXQdeCHVL",
-    "8CGJPWdM7xZX5E2ZE7qw5TiNUgpLyUeXJAnHr5goezeD",
-    "DVMnHHwq9SNxj4Bhd8mim1AacXfPemu6WsK8ox7Vexhg",
-    "J7pMJuvFoNni6UxAavxZ26zH39gzjUS57NKNiAvezetj",
-    "H4yHKvbqethH5CFwc5DUjErHETWQcDBSyB2vkXbdGX7r",
+    "9gDj8yWC8LtwiHF6QYjitz91k4a8RwNu3HxqL1SWHHU9", // CTJf74cTo3cw8acFP1YXF3QpsQUUBGBjh2k2e8xsZ6UL - might be https://x.com/punk1685
+    "2Jsy3qmi5WrozQVFyrFPw5MzivovyULMHELXweMDaqFp", // 358PuxphAQ26nktpniGzcooT1u3TZEsE2HmWgQUMpump - copy trade - 167.49 SOL - 28/07
+    "5ePaQ8YreTMQbNoBwiFe6mbvBLBYoGFek3U3pC8TVVsw", // 5ePaQ8YreTMQbNoBwiFe6mbvBLBYoGFek3U3pC8TVVsw - copy trade - 171.16 SOL - 28/07
+    "F1vonrRFUrrxKaPAHxaP6ReSi9d5FxBjNdhuV6pTEyFC", // 5ePaQ8YreTMQbNoBwiFe6mbvBLBYoGFek3U3pC8TVVsw - copy trade - 342.26 SOL - 28/07 (trades werent best but he knows something)
+    "AMcmpDC9en1vMkC59ykzXysqomcf86jdtNSLzmwj1sH1", // CTg3ZgYx79zrE1MteDVkmkcGniiFrK1hJ6yiabropump - copy trade (looks good) - 93.08 SOL 28/07
+    "GQWLRHtR18vy8myoHkgc9SMcSzwUdBjJ816vehSBwcis", // CTg3ZgYx79zrE1MteDVkmkcGniiFrK1hJ6yiabropump - copy trade (looks good)
     "DGMPQVy8gYu2dBX7SHA1MpA4Cn6pRkG4jChPGM18gGX3", // 8sWKTMrh9bWUrvykK4H3jzEzGbEqvJNpS2f7joYKpump - copy trade - 31.34 SOL - 27/07
     "H3E21pVS4mTgnkk263iVzrpP9sdXTnnvK5QnV2nJk1UE", // 8sWKTMrh9bWUrvykK4H3jzEzGbEqvJNpS2f7joYKpump - copy trade - 207.42 SOL - 27/07
     "Ff3BRkhA1zZed5Qv9fDBZft6ndA1cSSmdUCfBLjtQ3E7", // 8sWKTMrh9bWUrvykK4H3jzEzGbEqvJNpS2f7joYKpump
@@ -67,7 +67,7 @@ const track = async () => {
 
     const sortedCurrencies = uniqueItemsWithCount.sort((a, b) => (b as any).count - (a as any).count);
 
-    console.log('Top 10 Currencies', sortedCurrencies.slice(0, 20));
+    console.log('Top 10 Currencies', sortedCurrencies.slice(20, 40));
 
 }
 

@@ -1,0 +1,5 @@
+.DS_Store
+.idea/
+node_modules/
+pump-it/.DS_Store
+pump-it/client/.DS_Store
