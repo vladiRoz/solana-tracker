@@ -27,8 +27,9 @@ describe('TradingBot handleNewCoin', () => {
         const mockUuid = uuidv4();
         (sendTransaction as jest.Mock).mockResolvedValueOnce({ signature: mockUuid, errors: [] });
         (sendTransaction as jest.Mock).mockResolvedValueOnce({ signature: mockUuid, errors: [] });
+        jest.spyOn(bot, 'coinNameFilter').mockReturnValue(true);
 
-        const newCoin = { name: 'TestCoin', mint: 'test-mint' };
+        const newCoin = { name: 'TestCoin', mint: 'test-mint', symbol: 'TC'};
         bot.handleNewCoin(JSON.stringify(newCoin));
 
         jest.runAllTimers();
@@ -40,9 +41,10 @@ describe('TradingBot handleNewCoin', () => {
     });
 
     test('should set KILL_SWITCH to true when sendTransaction returns null', async () => {
+        jest.spyOn(bot, 'coinNameFilter').mockReturnValue(true);
         (sendTransaction as jest.Mock).mockResolvedValueOnce(null);
 
-        const newCoin = { name: 'TestCoin', mint: 'test-mint' };
+        const newCoin = { name: 'TestCoin', mint: 'test-mint', symbol: 'TC' };
         bot.handleNewCoin(JSON.stringify(newCoin));
 
         expect(sendTransaction).toHaveBeenCalledTimes(1);
