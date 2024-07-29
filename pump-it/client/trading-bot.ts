@@ -7,6 +7,7 @@ const WS_URL = 'wss://pumpportal.fun/api/data';
 
 const ACTIVE_COINS = 1;
 const ONE_TIME = true;
+let KILL_SWITCH = false;
 const BUY_AMOUNT = 0.055; // ~10$
 
 // at what hours/timezone usually there is more volume activity?
@@ -52,6 +53,11 @@ export class TradingBot {
 
         console.log('newCoin', newCoin);
 
+        if (KILL_SWITCH){
+            console.log('KILL_SWITCH on');
+            return;
+        }
+
         if (this.coinNameFilter(newCoin.name, NAME_FILTER)) {
             return;
         }
@@ -92,6 +98,7 @@ export class TradingBot {
                 action: "buy",
                 mint: coin.mint,
                 amount: BUY_AMOUNT,
+                slippage: 2,
             });
             const buyTime2 = Date.now();
             this.purchaseData.set(coin.mint, {
@@ -104,6 +111,7 @@ export class TradingBot {
             console.log('buyResponse', buyResponse);
 
             if (buyResponse === null || buyResponse?.errors) {
+                KILL_SWITCH = true;
                 resolve();
                 return;
             }
@@ -118,6 +126,7 @@ export class TradingBot {
                     action: "sell",
                     mint: coin.mint,
                     amount: "100%",
+                    slippage: 5,
                 });
                 const sellTime2 = Date.now();
                 const purchaseData = this.purchaseData.get(coin.mint);
@@ -130,6 +139,11 @@ export class TradingBot {
                 });
 
                 console.log('sellResponse', sellResponse);
+
+                if (sellResponse === null || sellResponse?.errors) {
+                    KILL_SWITCH = true;
+                }
+
                 resolve();
             }, 3000);
         });

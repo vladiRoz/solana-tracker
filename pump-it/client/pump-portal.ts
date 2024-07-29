@@ -24,7 +24,7 @@ export type PumpPortalTransaction = {
     mint: string,
     amount: number | string,
     denominatedInSol?: boolean,
-    slippage?: number,
+    slippage: number,
     priorityFee?: number,
     pool?: "pump" | "raydium"
 }
@@ -44,7 +44,7 @@ export const sendTransaction = async (trxData: PumpPortalTransaction) => {
                 "mint": trxData.mint,                         // contract address of the token you want to trade
                 "amount": trxData.amount,                     // amount of SOL or tokens to trade
                 "denominatedInSol": "true",                   // "true" if amount is SOL, "false" if amount is tokens
-                "slippage": 2,                                // percent slippage allowed
+                "slippage": trxData.slippage,                                // percent slippage allowed
                 "priorityFee": FASTER_FEE,                         // amount to use as Jito tip or priority fee
                 "pool": "pump"                                // exchange to trade on. "pump" or "raydium"
             }),
